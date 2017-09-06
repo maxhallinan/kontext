@@ -18,15 +18,15 @@ $ npm install --save kontext
 ```javascript
 import { provideCtx, } from 'kontext';
 
-const grow = (years, ctx, setCtx) => setCtx({
-  age: ctx.age + years,
+const grow = (years, age) => ({
+  age: years + age,
 });
 
 function Person(age) {
   this.age = age;
 }
 
-Person.prototype.grow = provideCtx(grow);
+Person.prototype.grow = provideCtx(['age'])(grow);
 
 const baby = new Person(1);
 
