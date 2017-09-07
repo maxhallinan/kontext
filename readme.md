@@ -18,6 +18,10 @@ $ npm install --save kontext
 ```javascript
 import { provideCtx, } from 'kontext';
 
+function Person(opts) {
+  this.age = opts.age;
+  this.name = opts.name;
+}
 
 const add = (x) => (y) => x + y; 
 
@@ -25,15 +29,10 @@ const setAge = (years, age, set) => set({
   age: add(years, age),
 });
 
+Person.prototype.grow = provideCtx([ 'age', ])(setAge);
+
 const sayAge = (name, age) => 
   console.log(`Hello. My name is ${name}. I am ${age} years old.`);
-
-function Person(opts) {
-  this.age = opts.age;
-  this.name = opts.name;
-}
-
-Person.prototype.grow = provideCtx([ 'age', ])(setAge);
 
 Person.prototype.sayAge = provideCtx([ 'name', 'age', ])(sayHello);
 
