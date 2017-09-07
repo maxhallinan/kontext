@@ -49,7 +49,7 @@ max.sayAge(); // 'Hello, my name is Max. I am 3 years old.'
 
 ## API
 
-### provideCtx(props)(([...,] ctx, ..., ctxSetter) -> *)
+### provideCtx(props)(ctxReceiver)
 
 Type: `[k] -> (*..., v, ..., ({k: v} -> void)) -> *`
 
@@ -68,7 +68,12 @@ A list of context values provided to `ctxReceiver`. The order of `props` specifi
 the order of arguments to `ctxReceiver`.
 
 
-#### ctx 
+#### ctxReceiver([...,] ctx, ..., ctxSetter)
+
+Type: `(*..., v, ..., ({k: v} -> void)) -> *`
+
+
+##### ctx 
 
 Type: `*`
 
@@ -76,7 +81,7 @@ One or more context values named in `props`. If a key is not found on the contex
 the value provided will be `undefined`.
 
 
-#### ctxSetter
+##### ctxSetter
 
 Type: `{k: v} -> void`
 
