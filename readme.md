@@ -18,7 +18,7 @@ $ npm install --save kontext
 ```javascript
 import { provideCtx, } from 'kontext';
 
-const grow = (years, age) => ({
+const grow = (years, age, setCtx) => setCtx({
   age: years + age,
 });
 
