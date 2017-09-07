@@ -53,11 +53,11 @@ max.sayAge(); // 'Hello, my name is Max. I am 3 years old.'
 
 Type: `[k] -> (*..., v, ..., ({k: v} -> void)) -> *`
 
-`provideCtx` injects desired context into a function via arguments, eliminating 
-direct references to `this`. `provideCtx` takes a list of context values and 
-returns a higher-order function. The higher-order function appends each of the 
-context values to the argument list of the base function. The last appended 
-argument is a context setter. 
+`provideCtx` injects specified context values into a function via arguments, 
+eliminating direct references to `this`. `provideCtx` takes a list of context 
+values and returns a higher-order function. The higher-order function appends 
+each of the context values to the argument list of the base function. The last 
+appended argument is a context setter. 
 
 
 #### props
