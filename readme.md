@@ -36,14 +36,14 @@ const sayAge = (name, age) =>
 
 Person.prototype.sayAge = provideCtx([ 'name', 'age', ])(sayHello);
 
-const baby = new Person({
+const max = new Person({
   age: 2,
   name: 'Max',
 });
 
-baby.sayAge(); // 'Hello, my name is Max. I am 2 years old.' 
-baby.grow(1);
-baby.sayAge(); // 'Hello, my name is Max. I am 3 years old.' 
+max.sayAge(); // 'Hello, my name is Max. I am 2 years old.' 
+max.grow(1);
+max.sayAge(); // 'Hello, my name is Max. I am 3 years old.' 
 ```
 
 
