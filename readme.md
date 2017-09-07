@@ -25,7 +25,7 @@ function Person(opts) {
 
 const add = (x) => (y) => x + y; 
 
-const setAge = (years, age, set) => set({ 
+const setAge = (years, age, setCtx) => setCtx({ 
   age: add(years, age),
 });
 
@@ -49,13 +49,42 @@ max.sayAge(); // 'Hello, my name is Max. I am 3 years old.'
 
 ## API
 
-### provideCtx(ctxReceiver)
+### provideCtx(props)(([...,] ctx, ..., ctxSetter) -> *)
 
-#### ctxReceiver
+Type: `[k] -> (*..., v, ..., ({k: v} -> void)) -> *`
 
-Type: `(*..., Context, ContextSetter) -> *`
+`provideCtx` injects desired context into a function via arguments, eliminating 
+direct references to `this`. `provideCtx` takes a list of context values and 
+returns a higher-order function. The higher-order function appends each of the 
+context values to the argument list of the base function. The last appended 
+argument is a context setter. 
+
+
+#### props
+
+Type: `[k]`
+
+A list of context values provided to `ctxReceiver`. The order of `props` specifies 
+the order of arguments to `ctxReceiver`.
+
+
+#### ctx 
+
+Type: `*`
+
+One or more context values named in `props`. If a key is not found on the context, 
+the value provided will be `undefined`.
+
+
+#### ctxSetter
+
+Type: `{k: v} -> void`
+
+A function for updating context. Takes a key/value map. For each key, the 
+corresponding context value is set.
 
 
 ## License
 
 MIT © [Max Hallinan](https://github.com/maxhallinan)
+
