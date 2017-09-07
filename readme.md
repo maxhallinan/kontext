@@ -18,21 +18,33 @@ $ npm install --save kontext
 ```javascript
 import { provideCtx, } from 'kontext';
 
-const grow = (years, age, setCtx) => setCtx({
-  age: years + age,
+
+const add = (x) => (y) => x + y; 
+
+const setAge = (years, age, set) => set({ 
+  age: add(years, age),
 });
 
-function Person(age) {
-  this.age = age;
+const sayAge = (name, age) => 
+  console.log(`Hello. My name is ${name}. I am ${age} years old.`);
+
+function Person(opts) {
+  this.age = opts.age;
+  this.name = opts.name;
 }
 
-Person.prototype.grow = provideCtx(['age'])(grow);
+Person.prototype.grow = provideCtx([ 'age', ])(setAge);
 
-const baby = new Person(1);
+Person.prototype.sayAge = provideCtx([ 'name', 'age', ])(sayHello);
 
-baby.age; // 1
+const baby = new Person({
+  age: 2,
+  name: 'Max',
+});
+
+baby.sayAge(); // 'Hello, my name is Max. I am 2 years old.' 
 baby.grow(1);
-baby.age; // 2
+baby.sayAge(); // 'Hello, my name is Max. I am 3 years old.' 
 ```
 
 
@@ -42,7 +54,7 @@ baby.age; // 2
 
 #### ctxReceiver
 
-Type: `(*..., {*}) -> *`
+Type: `(*..., Context, ContextSetter) -> *`
 
 
 ## License
