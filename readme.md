@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/maxhallinan/kontext.svg?branch=master)](https://travis-ci.org/maxhallinan/kontext)
 [![Coverage Status](https://coveralls.io/repos/github/maxhallinan/kontext/badge.svg)](https://coveralls.io/github/maxhallinan/kontext)
 
+*Work in progress*
 A higher-order function that proxies context to context-free functions.
 
 
