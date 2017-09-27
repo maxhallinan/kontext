@@ -15,47 +15,59 @@ $ yarn install kontext
 ## Usage
 
 ```javascript
-import kontext from 'kontext';
+import { getCtx, } from 'kontext';
 import { compose, log, prop, } from './util';
 
-function Greeter(opts) {
-  this.name = opts.name;
-}
-
-const sayHello = compose(
+// define a generic function
+const greet = compose(
   log,
-  (name) => `Hello. This is ${name}.`,
-  prop(`name`),
+  prop(`greeting`),
 );
 
-Greeter.prototype.sayHello = kontext([ `name`, ])(sayHello);
+// define a context
+function Greeter(opts) {
+  this.greeting = opts.greeting;
+}
+
+// lift the generic function into the context
+Greeter.prototype.greet = getCtx([ `greeting`, ])(greet);
 
 const dog = new Greeter({
-  name: `Dog`,
+  greeting: `Hello. This is Dog.`,
 });
 
-dog.sayHello(); // 'Hello. This is Dog.'
+dog.greet(); // 'Hello. This is Dog.'
 ```
 
 ```javascript
-import kontext from 'kontext';
+import { setCtx, } from 'kontext';
 import { add, compose, } from './util';
+
+const count = prop(`count`);
+
+const setCount = (count) => ({ count, });
+
+const withCount = setCtx([ `count`, ])
 
 function Counter(opts) {
   this.count = opts.base || 0;
 }
 
-const withCount = kontext([ `count`, ])
-
-const inc = (ctx, setCtx) => setCtx({
-  count: add(1, ctx.count),
-});
+const inc = (setCtx) => (ctx) => compose(
+  setCtx,
+  setCount,
+  add(1),
+  count,
+)(ctx);
 
 Person.prototype.inc = withCount(inc);
 
-const skip = (n, ctx, setCtx) => setCtx({
-  count: add(n, ctx.count),
-});
+const skip = (setCtx) => (n, ctx) => compose(
+  setCtx,
+  setCount,
+  add(n),
+  count,
+)(ctx);
 
 Person.prototype.skip = withCount(skip);
 
