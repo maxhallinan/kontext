@@ -42,12 +42,12 @@ dog.greet(); // 'Hello. This is Dog.'
 import kontext from 'kontext';
 import { add, compose, } from './util';
 
-// define generic getters and setters
+// define more generic getters and setters
 const count = prop(`count`);
 
 const setCount = (count) => ({ count, });
 
-// define a context
+// define another context
 function Counter(opts) {
   this.count = opts.base || 0;
 }
@@ -65,7 +65,7 @@ const inc = (ctx) => (setCtx) => compose(
 
 Person.prototype.inc = withCount(inc);
 
-// create units of portable logic that don't depend on correct `this` binding
+// create reusable logic that isn't coupled to `this`.
 const skip = (n, ctx) => (setCtx) => compose(
   setCtx,
   setCount,
