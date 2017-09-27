@@ -1,37 +1,44 @@
 {
-  "name": "kontext",
-  "version": "0.0.0",
-  "description": "Proxy context to context-free functions.",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/maxhallinan/kontext"
-  },
-  "main": "./lib/index.js",
-  "module": "es/index.es.js",
+	"name": "kontext",
+	"version": "0.0.0",
+	"description": "A higher-order function that proxies context to context free functions.",
+	"license": "MIT",
+	"repository": "maxhallinan/kontext",
+	"author": {
+		"name": "Max Hallinan",
+		"email": "maxhallinan@riseup.net",
+		"url": "github.com/maxhallinan"
+	},
+	"engines": {
+		"node": ">=4"
+	},
+	"main": "lib/index.js",
+	"module": "es/index.js",
   "jsnext:main": "es/index.js",
   "unpkg": "dist/kontext.min.js",
-  "scripts": {
+	"scripts": {
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "build:umd": "cross-env BABEL_ENV=rollup NODE_ENV=development rollup -c -o dist/kontext.js",
     "build:umd:min": "cross-env BABEL_ENV=rollup NODE_ENV=production rollup -c -o dist/kontext.min.js",
     "build": "npm run clean && npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "clean": "rimraf coverage dist es lib",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage": "cat ./coverage/lcov.info | coveralls",
     "lint": "./node_modules/.bin/eslint src test",
+		"flow": "flow",
     "prepublishOnly": "npm run clean && npm run build",
-    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest",
-    "test:watch": "cross-env NODE_ENV=test BABEL_ENV=test jest --watch",
-    "test:foo": "cross-env NODE_ENV=test BABEL_ENV=test nyc jest 'test/**/*.spec.js'",
-    "test:foo:watch": "cross-env NODE_ENV=test BABEL_ENV=test nyc mocha 'test/**/*.spec.js' --watch"
-  },
-  "author": {
-    "name": "Max Hallinan",
-    "email": "maxhallinan@riseup.net"
-  },
-  "dependencies": {},
-  "devDependencies": {
+    "test": "cross-env NODE_ENV=test BABEL_ENV=test jest --coverage",
+    "test:watch": "cross-env NODE_ENV=test BABEL_ENV=test jest --watch"
+	},
+	"files": [
+		"dist",
+		"es",
+		"lib",
+		"src"
+	],
+	"keywords": [],
+	"dependencies": {},
+	"devDependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
     "babel-plugin-check-es2015-constants": "^6.22.0",
@@ -58,23 +65,21 @@
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-transform-regenerator": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
+		"babel-preset-flow": "^6.23.0",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.24.1",
     "babelrc-rollup": "^3.0.0",
-    "chai": "^4.0.2",
     "coveralls": "^2.13.1",
     "cross-env": "^5.0.1",
     "enzyme": "^2.9.1",
     "eslint": "^4.1.1",
+		"flow-bin": "^0.55.0",
     "jest": "^20.0.4",
+    "jest-cli": "^21.0.2",
     "jest-enzyme": "^3.8.1",
-    "mocha": "^3.4.2",
-    "mocha-lcov-reporter": "^1.3.0",
-    "nyc": "^11.0.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
-    "redux": "^3.7.1",
     "rimraf": "^2.6.1",
     "rollup": "^0.43.0",
     "rollup-plugin-babel": "^2.7.1",
@@ -82,15 +87,8 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-uglify": "^2.0.1",
     "rollup-watch": "^4.0.0"
-  },
-  "keywords": [
-    "redux",
-    "redux-action"
-  ],
-  "files": [
-    "dist",
-    "es",
-    "lib",
-    "src"
-  ]
+	},
+  "jest": {
+    "verbose": true
+  }
 }
