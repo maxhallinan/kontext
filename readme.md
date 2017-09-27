@@ -15,7 +15,7 @@ $ yarn install kontext
 ## Usage
 
 ```javascript
-import { getCtx, } from 'kontext';
+import kontext from 'kontext';
 import { compose, log, prop, } from './util';
 
 // define a generic function
@@ -30,30 +30,33 @@ function Greeter(opts) {
 }
 
 // lift the generic function into the context
-Greeter.prototype.greet = getCtx([ `greeting`, ])(greet);
+Greeter.prototype.greet = kontext([ `greeting`, ])(greet);
 
 const dog = new Greeter({
   greeting: `Hello. This is Dog.`,
 });
-
 dog.greet(); // 'Hello. This is Dog.'
 ```
 
 ```javascript
-import { setCtx, } from 'kontext';
+import kontext from 'kontext';
 import { add, compose, } from './util';
 
+// define generic getters and setters
 const count = prop(`count`);
 
 const setCount = (count) => ({ count, });
 
-const withCount = setCtx([ `count`, ])
-
+// define a context
 function Counter(opts) {
   this.count = opts.base || 0;
 }
 
-const inc = (setCtx) => (ctx) => compose(
+const withCount = kontext([ `count`, ])
+
+// pass `kontext` a thunk to gain access to a context setter
+const inc = (ctx) => (setCtx) => compose(
+  // compose generic functions with the context setter to mutate the context
   setCtx,
   setCount,
   add(1),
@@ -62,7 +65,8 @@ const inc = (setCtx) => (ctx) => compose(
 
 Person.prototype.inc = withCount(inc);
 
-const skip = (setCtx) => (n, ctx) => compose(
+// create units of portable logic that don't depend on correct `this` binding
+const skip = (n, ctx) => (setCtx) => compose(
   setCtx,
   setCount,
   add(n),
