@@ -16,7 +16,7 @@ $ yarn install kontext
 
 ```javascript
 import kontext from 'kontext';
-import { compose, log, } from './util';
+import { compose, log, prop, } from './util';
 
 function Greeter(opts) {
   this.name = opts.name;
@@ -25,6 +25,7 @@ function Greeter(opts) {
 const sayHello = compose(
   log,
   (name) => `Hello. This is ${name}.`,
+  prop(`name`),
 );
 
 Greeter.prototype.sayHello = kontext([ `name`, ])(sayHello);
@@ -46,14 +47,14 @@ function Counter(opts) {
 
 const withCount = kontext([ `count`, ])
 
-const inc = (count, setCtx) => setCtx({
-  count: add(1, count),
+const inc = (ctx, setCtx) => setCtx({
+  count: add(1, ctx.count),
 });
 
 Person.prototype.inc = withCount(inc);
 
-const skip = (n, count, setCtx) => setCtx({
-  count: add(n, count)
+const skip = (n, ctx, setCtx) => setCtx({
+  count: add(n, ctx.count),
 });
 
 Person.prototype.skip = withCount(skip);
@@ -78,11 +79,11 @@ Type: `String[]`
 Lorem ipsum.
 
 
-### setCtx(keys)
+### setCtx(props)
 
-#### keys
+#### props
 
-Type: `String[]`
+Type: `Object`
 
 Lorem ipsum.
 
