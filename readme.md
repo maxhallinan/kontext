@@ -78,10 +78,15 @@ Type: `String[]`
 
 Lorem ipsum.
 
+#### ctx
 
-### setCtx(props)
+Type: `Object`
 
-#### props
+#### setCtx(props)
+
+Type: `({ k: *}) -> { k: * }`
+
+##### props
 
 Type: `Object`
 
