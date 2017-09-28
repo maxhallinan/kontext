@@ -135,7 +135,22 @@ describe(`kontext > input validation`, () => {
     expect(ctx.foo).toBeUndefined();
   });
 
-  test(`The second argument appended to the base function is a \`setCtx\` function.`, () => {});
+  test(`The second argument appended to the base function is a \`setCtx\` function.`, () => {
+    const base = jest.fn();
+    const keys = [ `foo`, ];
+    const withCtx = kontext(keys);
 
-  test(`\`setCtx\` sets the value of each entry on the context.`, () => {});
+    function Foo() {}
+    Foo.prototype.bar = withCtx(base);
+    const foo = new Foo();
+    foo.bar();
+
+    const setCtx = base.calls[0][1];
+
+    expect(typeOf(setCtx)).toBe(`function`);
+  });
+
+  test(`\`setCtx\` sets the value of each entry on the context.`, () => {
+
+  });
 });
