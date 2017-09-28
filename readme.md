@@ -86,7 +86,7 @@ counter.count; // 11
 
 ### kontext(keys)
 
-Type: `Array k -> ({k: *}, ({k: *}) -> {k: *}) -> *`
+Type: `Array k -> (({k: *}, ({k: *}) -> {k: *}) -> a) -> a`
 
 #### keys
 
