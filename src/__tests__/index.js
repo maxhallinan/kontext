@@ -6,7 +6,7 @@ describe(`kontext`, () => {
     const errClass = TypeError;
     const errMsg = (val) => `Expected an array but was called with type ${typeof val}.`;
 
-    [ {}, 'foo', true, 1, null, undefined, ].forEach((val) => {
+    [ {}, `foo`, true, 1, null, undefined, ].forEach((val) => {
       expect(() => kontext(val)).toThrow(errClass);
       expect(() => kontext(val)).toThrow(errMsg(val));
     });
@@ -16,7 +16,7 @@ describe(`kontext`, () => {
     const errClass = TypeError;
     const errMsg = (val) => `Expected a function but was called with type ${typeof val}.`;
 
-    [ {}, 'foo', true, 1, null, undefined, ].forEach((val) => {
+    [ {}, `foo`, true, 1, null, undefined, ].forEach((val) => {
       expect(() => kontext([])(val)).toThrow(errClass);
       expect(() => kontext([])(val)).toThrow(errMsg(val));
     });
@@ -41,7 +41,7 @@ describe(`kontext`, () => {
 
     expect(base.calls[0].length).toBe(1);
     expect(base.calls[1].length).toBe(2);
-    expect(base.calls[1]).toBe([1, {},]);
+    expect(base.calls[1]).toBe([ 1, {}, ]);
   });
 
   test(`The \`ctx\` object has a property for each key in the \`keys\` argument.`, () => {
@@ -76,7 +76,7 @@ describe(`kontext`, () => {
       }
     }
     Bar.prototype.baz = withCtx(base);
-    const bar = new Bar('foo', 'bar');
+    const bar = new Bar(`foo`, `bar`);
     bar.baz();
 
     const ctx = base.calls[0][0];
@@ -117,7 +117,7 @@ describe(`kontext`, () => {
 
     const ctx = base.calls[0][0];
 
-    expect(ctx.hasOwnProperty('foo')).toBeTruthy();
+    expect(ctx.hasOwnProperty(`foo`)).toBeTruthy();
     expect(ctx.foo).toBeUndefined();
   });
 
@@ -127,7 +127,7 @@ describe(`kontext`, () => {
     const withCtx = kontext(keys);
 
     function Foo() {}
-    Foo.prototype.bar = withCtx((ctx) => base);
+    Foo.prototype.bar = withCtx(() => base);
     const foo = new Foo();
     foo.bar();
 
@@ -147,9 +147,9 @@ describe(`kontext`, () => {
     function Foo(x) {
       this.foo = x;
     }
-    Foo.prototype.setFooBar = withCtx(base);
-    const foo = new Foo('foo');
-    foo.setFooBar('bar');
+    Foo.prototype.setFooBar = withCtx(setFooBar);
+    const foo = new Foo(`foo`);
+    foo.setFooBar(`bar`);
 
     expect(foo.foo).toBe(`FOO`);
     expect(foo.bar).toBe(`bar`);
