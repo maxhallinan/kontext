@@ -137,6 +137,21 @@ describe(`kontext`, () => {
   });
 
   test(`\`setCtx\` sets the value of each entry on the context.`, () => {
+    const keys = [ `foo`, ];
+    const withCtx = kontext(keys);
+    const setFooBar = (bar, ctx) => (setCtx) => setCtx({
+      foo: ctx.foo.toUpperCase(),
+      bar,
+    });
 
+    function Foo(x) {
+      this.foo = x;
+    }
+    Foo.prototype.setFooBar = withCtx(base);
+    const foo = new Foo('foo');
+    foo.setFooBar('bar');
+
+    expect(foo.foo).toBe(`FOO`);
+    expect(foo.bar).toBe(`bar`);
   });
 });
