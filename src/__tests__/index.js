@@ -69,7 +69,7 @@ describe(`kontext > input validation`, () => {
     const foo = new Foo('foo');
     foo.bar();
 
-    const ctx = base.calls[0][1];
+    const ctx = base.calls[0][0];
 
     expect(Object.keys(ctx)).toEqual(keys);
   });
@@ -92,7 +92,7 @@ describe(`kontext > input validation`, () => {
     const bar = new Bar('foo', 'bar');
     bar.baz();
 
-    const ctx = base.calls[0][1];
+    const ctx = base.calls[0][0];
 
     expect(ctx.foo).toBe(`foo`);
     expect(ctx.bar).toBe(`bar`);
@@ -119,7 +119,21 @@ describe(`kontext > input validation`, () => {
     expect(foo.barAddOne()).toBe(2);
   });
 
-  test(`Sets \`undefined\` on the \`ctx\` object for properties that don't exist.`, () => {});
+  test(`Sets \`undefined\` on the \`ctx\` object for properties that don't exist.`, () => {
+    const base = jest.fn();
+    const keys = [ `foo`, ];
+    const withCtx = kontext(keys);
+
+    function Foo() {}
+    Foo.prototype.bar = withCtx(base);
+    const foo = new Foo();
+    foo.bar();
+
+    const ctx = base.calls[0][0];
+
+    expect(ctx.hasOwnProperty('foo')).toBeTruthy();
+    expect(ctx.foo).toBeUndefined();
+  });
 
   test(`The second argument appended to the base function is a \`setCtx\` function.`, () => {});
 
