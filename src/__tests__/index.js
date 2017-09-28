@@ -98,7 +98,26 @@ describe(`kontext > input validation`, () => {
     expect(ctx.bar).toBe(`bar`);
   });
 
-  test(`Binds \`this\` to function values.`, () => {});
+  test(`Binds \`this\` to function values.`, () => {
+    const keys = [ `getBar`, ];
+    const withCtx = kontext(keys);
+
+    function Foo(bar) {
+      this.bar = bar;
+    }
+
+    Foo.prototype.getBar = function () {
+      return this.bar;
+    };
+
+    const barAddOne = ({ getBar, }) => getBar() + 1;
+
+    Foo.prototype.barAddOne = withCtx(barAddOne);
+
+    const foo = new Foo(1);
+
+    expect(foo.barAddOne()).toBe(2);
+  });
 
   test(`Sets \`undefined\` on the \`ctx\` object for properties that don't exist.`, () => {});
 
