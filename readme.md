@@ -42,12 +42,10 @@ dog.greet(); // 'Hello. This is Dog.'
 import kontext from 'kontext';
 import { add, compose, } from './util';
 
-// define more generic getters and setters
 const count = prop(`count`);
 
 const setCount = (count) => ({ count, });
 
-// define another context
 function Counter(opts) {
   this.count = opts.base || 0;
 }
@@ -86,25 +84,27 @@ counter.count; // 11
 
 ## API
 
-### withCtx(keys)
+### kontext(keys)
+
+Type: `Array k -> ({k: *}, ({k: *}) -> {k: *}) -> *`
 
 #### keys
 
-Type: `String[]`
+Type: `Array k`
 
 Lorem ipsum.
 
 #### ctx
 
-Type: `Object`
+Type: `{k: *}`
 
 #### setCtx(props)
 
-Type: `({ k: *}) -> { k: * }`
+Type: `({k: *}) -> {k: *}`
 
 ##### props
 
-Type: `Object`
+Type: `{k: *}`
 
 Lorem ipsum.
 
