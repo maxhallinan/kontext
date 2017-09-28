@@ -1,72 +1,57 @@
 import kontext from './..';
 import { typeOf, } from './../util';
 
-describe(`kontext > input validation`, () => {
-  test(`Throws a TypeError if the \`keys\` argument is not an array.`, () => {
-    const errConstructor = TypeError;
-    const errMsg = (val) =>
-      `Expected an array but was called with type ${typeof val}.`;
+describe(`kontext`, () => {
+  test(`Throws a TypeError if \`kontext\` is called without an array.`, () => {
+    const errClass = TypeError;
+    const errMsg = (val) => `Expected an array but was called with type ${typeof val}.`;
 
-    [ {}, true, 1, null, undefined, ].forEach((val) => {
-      expect(() => kontext(val)).toThrow(errConstructor);
+    [ {}, 'foo', true, 1, null, undefined, ].forEach((val) => {
+      expect(() => kontext(val)).toThrow(errClass);
       expect(() => kontext(val)).toThrow(errMsg(val));
     });
   });
 
-  test(`Throws a TypeError if the argument to the higher-order function is not a function.`, () => {
-    const errConstructor = TypeError;
-    const errMsg = (val) =>
-      `Expected a function but was called with type ${typeof val}.`;
+  test(`Throws a \`TypeError\` if the returned higher-order function is called without a function.`, () => {
+    const errClass = TypeError;
+    const errMsg = (val) => `Expected a function but was called with type ${typeof val}.`;
 
-    [ {}, true, 1, null, undefined, ].forEach((val) => {
-      expect(() => kontext([])(val)).toThrow(errConstructor);
+    [ {}, 'foo', true, 1, null, undefined, ].forEach((val) => {
+      expect(() => kontext([])(val)).toThrow(errClass);
       expect(() => kontext([])(val)).toThrow(errMsg(val));
     });
   });
 
-  test(`Returns a function.`, () => {
+  test(`\`kontext\` returns a function.`, () => {
     const keys = [];
     const withCtx = kontext(keys);
     expect(typeOf(withCtx)).toBe(`function`);
   });
 
-  test(`Appends two arguments to the base function.`, () => {
+  test(`Appends a \`ctx\` object to the base function arguments list.`, () => {
+    const base = jest.fn();
     const keys = [];
     const withCtx = kontext(keys);
-    const base = jest.fn();
 
     function Foo() {}
     Foo.prototype.bar = withCtx(base);
-
     const foo = new Foo();
     foo.bar();
     foo.bar(1);
 
-    expect(base.calls[0].length).toBe(2);
-    expect(base.calls[1].length).toBe(3);
-  });
-
-  test(`The first argument appended to the base function is a \`ctx\` object.`, () => {
-    const base = jest.fn();
-    const keys = [];
-    const withCtx = kontext(keys);
-
-    function Foo() {}
-    Foo.prototype.bar = withCtx(base);
-    const foo = new Foo('foo');
-    foo.bar();
-
-    expect(typeOf(base.calls[0][1])).toBe(`object`);
+    expect(base.calls[0].length).toBe(1);
+    expect(base.calls[1].length).toBe(2);
+    expect(base.calls[1]).toBe([1, {},]);
   });
 
   test(`The \`ctx\` object has a property for each key in the \`keys\` argument.`, () => {
     const base = jest.fn();
-    const keys = [ `foo`, ];
+    const keys = [ `foo`, `bar`, `baz`, ];
     const withCtx = kontext(keys);
 
-    function Foo(x) { this.foo = x; }
+    function Foo() {}
     Foo.prototype.bar = withCtx(base);
-    const foo = new Foo('foo');
+    const foo = new Foo();
     foo.bar();
 
     const ctx = base.calls[0][0];
@@ -74,13 +59,15 @@ describe(`kontext > input validation`, () => {
     expect(Object.keys(ctx)).toEqual(keys);
   });
 
-  test(`\`kontext\` picks own and inherited properties.`, () => {
+  test(`The \`ctx\` object includes both own and inherited properties of the context.`, () => {
     const base = jest.fn();
     const keys = [ `foo`, `bar`, ];
     const withCtx = kontext(keys);
 
     class Foo {
-      constructor(x) { this.foo = x; }
+      constructor(x) {
+        this.foo = x;
+      }
     }
     class Bar extends Foo {
       constructor(x, y) {
@@ -105,7 +92,6 @@ describe(`kontext > input validation`, () => {
     function Foo(bar) {
       this.bar = bar;
     }
-
     Foo.prototype.getBar = function () {
       return this.bar;
     };
@@ -135,17 +121,17 @@ describe(`kontext > input validation`, () => {
     expect(ctx.foo).toBeUndefined();
   });
 
-  test(`The second argument appended to the base function is a \`setCtx\` function.`, () => {
+  test(`If base function is a thunk, calls the inner function with a \`setCtx\` argument.`, () => {
     const base = jest.fn();
     const keys = [ `foo`, ];
     const withCtx = kontext(keys);
 
     function Foo() {}
-    Foo.prototype.bar = withCtx(base);
+    Foo.prototype.bar = withCtx((ctx) => base);
     const foo = new Foo();
     foo.bar();
 
-    const setCtx = base.calls[0][1];
+    const setCtx = base.calls[0][0];
 
     expect(typeOf(setCtx)).toBe(`function`);
   });
