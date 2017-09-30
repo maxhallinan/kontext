@@ -7,6 +7,8 @@ const validateKeys = validateType('array')('ctxKeys');
 
 const validateBase = validateType('function')('baseFunction');
 
+const validateProps = validateType('object')('props');
+
 const kontext = validateKeys((ctxKeys) => {
   const pickCtx = pickFromCtx(ctxKeys);
 
@@ -17,7 +19,7 @@ const kontext = validateKeys((ctxKeys) => {
       const res = baseFunction(...args, ctx);
 
       return (isFunction(res)
-        ? res(setCtx.bind(this))
+        ? res(validateProps(setCtx.bind(this)))
         : res);
     };
   });

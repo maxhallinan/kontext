@@ -142,6 +142,21 @@ describe(`kontext`, () => {
     expect(typeOf(setCtx)).toBe(`function`);
   });
 
+  test(`Throws a \`TypeError\` if the \`setCtx\` is called without an object.`, () => {
+    const errClass = TypeError;
+    const errMsg = (x) => (
+      `Expected \`props\` to be a object. ` +
+      `\`props\` is type ${typeOf(x)} instead.`
+    );
+
+    const testThunk = (x) => () => (setCtx) => setCtx(x);
+
+    [ [], `foo`, true, 1, null, undefined, ].forEach((x) => {
+      expect(() => kontext([])(testThunk(x))()).toThrow(errClass);
+      expect(() => kontext([])(testThunk(x))()).toThrow(errMsg(x));
+    });
+  });
+
   test(`\`setCtx\` sets the value of each entry on the context.`, () => {
     const keys = [ `foo`, ];
     const withCtx = kontext(keys);
