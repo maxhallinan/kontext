@@ -4,7 +4,10 @@ import { typeOf, } from './../util';
 describe(`kontext`, () => {
   test(`Throws a TypeError if \`kontext\` is called without an array.`, () => {
     const errClass = TypeError;
-    const errMsg = (val) => `Expected an array but was called with type ${typeof val}.`;
+    const errMsg = (val) => (
+      `Expected \`keys\` to be an array. ` +
+      `\`keys\` is type ${typeOf(val)} instead.`
+    );
 
     [ {}, `foo`, true, 1, null, undefined, ].forEach((val) => {
       expect(() => kontext(val)).toThrow(errClass);
