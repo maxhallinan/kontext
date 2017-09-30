@@ -84,29 +84,55 @@ counter.count; // 11
 
 ## API
 
-### kontext(keys)
+### kontext(keys)(baseFunction)
 
 Type: `Array k -> (({k: *}, ({k: *}) -> {k: *}) -> a) -> a`
+
+Takes an array of keys and returns a higher-order function. Picks each key from
+the context and provides the result to the base function.
 
 #### keys
 
 Type: `Array k`
 
-Lorem ipsum.
+An array of keys to pick from the function context.
+
+
+### baseFunction(...*, ctx)
+
+The function to lift into the context. The higher-order function appends `ctx` to
+the arguments list of the base function.
 
 #### ctx
 
 Type: `{k: *}`
 
+The result of picking `keys` from the function context. The `ctx` object is a
+collection of key/value pairs. Each `key` is an item in the `keys` array. Each
+value is the value of that key on the function's context. The value of a key
+that is not found on the function context is `undefined` on the `ctx` object.
+`kontext` binds function values to the context.
+
+
+### baseFunction(...*, ctx)(setCtx)
+
+If the base function is a thunk, `kontext` will call the inner function with a
+context setter.
+
 #### setCtx(props)
 
 Type: `({k: *}) -> {k: *}`
+
+Updates the context with each of the provided key/value pairs. The values of
+existing keys are overwritten. Any key in `props` which refers to an inherited
+property will become an own property when updated with `setCtx`.
 
 ##### props
 
 Type: `{k: *}`
 
-Lorem ipsum.
+A collection of key/value pairs where each key is a context property to update
+and each value is the new value of that property.
 
 
 ## License

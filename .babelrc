@@ -21,7 +21,6 @@
     "transform-regenerator",
     "transform-object-rest-spread"
   ],
-  "presets": ["flow"],
   "env": {
     "commonjs": {
       "ignore": [ "**/__tests__/" ],
