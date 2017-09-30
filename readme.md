@@ -84,14 +84,14 @@ counter.count; // 11
 
 ## API
 
-### kontext(keys)(baseFunction)
+### kontext(ctxKeys)(baseFunction)
 
 Type: `Array k -> (({k: *}, ({k: *}) -> {k: *}) -> a) -> a`
 
 Takes an array of keys and returns a higher-order function. Picks each key from
 the context and provides the result to the base function.
 
-#### keys
+#### ctxKeys
 
 Type: `Array k`
 
@@ -107,8 +107,8 @@ the arguments list of the base function.
 
 Type: `{k: *}`
 
-The result of picking `keys` from the function context. The `ctx` object is a
-collection of key/value pairs. Each `key` is an item in the `keys` array. Each
+The result of picking `ctxKeys` from the function context. The `ctx` object is a
+collection of key/value pairs. Each `key` is an item in the `ctxKeys` array. Each
 value is the value of that key on the function's context. The value of a key
 that is not found on the function context is `undefined` on the `ctx` object.
 `kontext` binds function values to the context.

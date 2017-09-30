@@ -5,8 +5,8 @@ describe(`kontext`, () => {
   test(`Throws a TypeError if \`kontext\` is called without an array.`, () => {
     const errClass = TypeError;
     const errMsg = (val) => (
-      `Expected \`keys\` to be an array. ` +
-      `\`keys\` is type ${typeOf(val)} instead.`
+      `Expected \`ctxKeys\` to be a array. ` +
+      `\`ctxKeys\` is type ${typeOf(val)} instead.`
     );
 
     [ {}, `foo`, true, 1, null, undefined, ].forEach((val) => {
@@ -17,7 +17,10 @@ describe(`kontext`, () => {
 
   test(`Throws a \`TypeError\` if the returned higher-order function is called without a function.`, () => {
     const errClass = TypeError;
-    const errMsg = (val) => `Expected a function but was called with type ${typeof val}.`;
+    const errMsg = (val) => (
+      `Expected \`baseFunction\` to be a function. ` +
+      `\`baseFunction\` is type ${typeOf(val)} instead.`
+    );
 
     [ {}, `foo`, true, 1, null, undefined, ].forEach((val) => {
       expect(() => kontext([])(val)).toThrow(errClass);
