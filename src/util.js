@@ -5,11 +5,6 @@ export const branch = (predicate) => (left) => (right) => (...xs) =>
 
 export const isArray = (x) => typeOf(x) === `array`;
 
-export const pick = (keys) => (source) => keys.reduce((picked, k) => ({
-  ...picked,
-  [k]: source[k],
-}), {});
-
 export const typeOf = (x)  =>
   ({}).toString
     .call(x)
