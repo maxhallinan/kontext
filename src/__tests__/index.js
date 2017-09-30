@@ -45,9 +45,9 @@ describe(`kontext`, () => {
     foo.bar();
     foo.bar(1);
 
-    expect(base.calls[0].length).toBe(1);
-    expect(base.calls[1].length).toBe(2);
-    expect(base.calls[1]).toBe([ 1, {}, ]);
+    expect(base.mock.calls[0].length).toBe(1);
+    expect(base.mock.calls[1].length).toBe(2);
+    expect(base.mock.calls[1]).toEqual([ 1, {}, ]);
   });
 
   test(`The \`ctx\` object has a property for each key in the \`keys\` argument.`, () => {
@@ -60,7 +60,7 @@ describe(`kontext`, () => {
     const foo = new Foo();
     foo.bar();
 
-    const ctx = base.calls[0][0];
+    const ctx = base.mock.calls[0][0];
 
     expect(Object.keys(ctx)).toEqual(keys);
   });
@@ -85,7 +85,7 @@ describe(`kontext`, () => {
     const bar = new Bar(`foo`, `bar`);
     bar.baz();
 
-    const ctx = base.calls[0][0];
+    const ctx = base.mock.calls[0][0];
 
     expect(ctx.foo).toBe(`foo`);
     expect(ctx.bar).toBe(`bar`);
@@ -121,7 +121,7 @@ describe(`kontext`, () => {
     const foo = new Foo();
     foo.bar();
 
-    const ctx = base.calls[0][0];
+    const ctx = base.mock.calls[0][0];
 
     expect(ctx.hasOwnProperty(`foo`)).toBeTruthy();
     expect(ctx.foo).toBeUndefined();
@@ -137,7 +137,7 @@ describe(`kontext`, () => {
     const foo = new Foo();
     foo.bar();
 
-    const setCtx = base.calls[0][0];
+    const setCtx = base.mock.calls[0][0];
 
     expect(typeOf(setCtx)).toBe(`function`);
   });
