@@ -1,4 +1,6 @@
 import pickFromCtx from './pick-from-ctx';
+import setCtx from './set-ctx';
+import { branch, isFunction, } from './util';
 import validateType from './validate-type';
 
 const validateKeys = validateType('array')('ctxKeys');
@@ -12,7 +14,11 @@ const kontext = validateKeys((ctxKeys) => {
     return function withCtx(...args) {
       const ctx = pickCtx(this);
 
-      return baseFunction(...args, ctx);
+      const res = baseFunction(...args, ctx);
+
+      return (isFunction(res)
+        ? res(setCtx.bind(this))
+        : res);
     };
   });
 });
