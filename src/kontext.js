@@ -1,13 +1,13 @@
 import pickFromCtx from './pick-from-ctx';
 import setCtx from './set-ctx';
-import { branch, isFunction, } from './util';
+import { isFunction, } from './util';
 import validateType from './validate-type';
 
-const validateKeys = validateType('array')('ctxKeys');
+const validateKeys = validateType(`array`)(`ctxKeys`);
 
-const validateBase = validateType('function')('baseFunction');
+const validateBase = validateType(`function`)(`baseFunction`);
 
-const validateProps = validateType('object')('props');
+const validateProps = validateType(`object`)(`props`);
 
 const kontext = validateKeys((ctxKeys) => {
   const pickCtx = pickFromCtx(ctxKeys);

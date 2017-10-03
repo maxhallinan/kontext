@@ -10,10 +10,12 @@ const handleInvalid = (type) => (name) => (x) => {
 };
 
 const validateType = (type) => (name) => (handleValid) => (
+  /* eslint-disable no-unexpected-multiline */
   branch
   (isValid(type))
   (handleInvalid(type)(name))
   (handleValid)
+  /* eslint-enable no-unexpected-multiline */
 );
 
 export default validateType;
