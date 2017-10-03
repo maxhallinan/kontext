@@ -86,8 +86,6 @@ counter.count; // 11
 
 ### kontext(ctxKeys)(baseFunction)
 
-Type: `Array k -> (({k: *}, ({k: *}) -> {k: *}) -> a) -> a`
-
 Takes an array of keys and returns a higher-order function. Picks each key from
 the context and provides the result to the base function.
 
@@ -101,7 +99,7 @@ An array of keys to pick from the function context.
 ### baseFunction(...*, ctx)
 
 The function to lift into the context. The higher-order function appends `ctx` to
-the arguments list of the base function.
+the arguments list of `baseFunction`.
 
 #### ctx
 
