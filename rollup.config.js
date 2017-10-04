@@ -8,7 +8,7 @@ const pkg = require('./package.json');
 const env = process.env.NODE_ENV;
 
 const deps = Object.keys(pkg.dependencies);
-const peerDeps = Object.keys(pkg.peerDependencies);
+const peerDeps = pkg.peerDependencies ? Object.keys(pkg.peerDependencies) : [];
 const external = deps.concat(peerDeps);
 
 const plugins = [
