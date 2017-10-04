@@ -47,16 +47,14 @@ import { add, compose, } from './util';
 
 const count = prop(`count`);
 const setCount = (count) => ({ count, });
+const withCount = kontext([ `count`, ]);
 
 function Counter(opts = {}) {
   this.count = opts.init || 0;
 }
 
-const withCount = kontext([ `count`, ]);
-
-// pass `kontext` a thunk to gain access to a context setter
-const inc = (ctx) => (setCtx) => compose(
-  // compose generic functions with the context setter to mutate the context
+// compose generic functions with the context setter to mutate the context
+const inc = (ctx, setCtx) => compose(
   setCtx,
   setCount,
   add(1),
@@ -65,7 +63,7 @@ const inc = (ctx) => (setCtx) => compose(
 Counter.prototype.inc = withCount(inc);
 
 // create reusable logic that isn't coupled to `this`.
-const skip = (n, ctx) => (setCtx) => compose(
+const skip = (n, ctx, setCtx) => compose(
   setCtx,
   setCount,
   add(n),
@@ -96,12 +94,12 @@ Type: `Array k`
 An array of keys to pick from the function context.
 
 
-### baseFunction(...*, ctx)
+#### baseFunction(...*, ctx, setCtx)
 
-The function to lift into the context. The higher-order function appends `ctx` to
-the arguments list of `baseFunction`.
+The function to lift into the context. The higher-order function appends `ctx`
+and `setCtx` to the arguments list of `baseFunction`.
 
-#### ctx
+##### ctx
 
 Type: `{k: *}`
 
@@ -112,12 +110,7 @@ that is not found on the function context is `undefined` on the `ctx` object.
 `kontext` binds function values to the context.
 
 
-### baseFunction(...*, ctx)(setCtx)
-
-If the base function is a thunk, `kontext` will call the inner function with a
-context setter.
-
-#### setCtx(props)
+##### setCtx(props)
 
 Type: `({k: *}) -> {k: *}`
 
@@ -125,7 +118,7 @@ Updates the context with each of the provided key/value pairs. The values of
 existing keys are overwritten. Any key in `props` which refers to an inherited
 property will become an own property when updated with `setCtx`.
 
-##### props
+###### props
 
 Type: `{k: *}`
 

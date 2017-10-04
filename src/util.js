@@ -6,8 +6,6 @@ export const branch = (predicate) => (left) => (right) => (...xs) =>
 export const entries = (src) => Object.keys(src)
   .map(key => ([ key, src[key], ]));
 
-export const isFunction = (x) => typeof(x) === `function`;
-
 export const typeOf = (x)  =>
   ({}).toString
     .call(x)

@@ -34,7 +34,7 @@ describe(`kontext`, () => {
     expect(typeOf(withCtx)).toBe(`function`);
   });
 
-  test(`Appends a \`ctx\` object to the base function arguments list.`, () => {
+  test(`Appends a \`ctx\` object and a \`setCtx\` function to the base function arguments list.`, () => {
     const base = jest.fn();
     const keys = [];
     const withCtx = kontext(keys);
@@ -45,9 +45,10 @@ describe(`kontext`, () => {
     foo.bar();
     foo.bar(1);
 
-    expect(base.mock.calls[0].length).toBe(1);
-    expect(base.mock.calls[1].length).toBe(2);
-    expect(base.mock.calls[1]).toEqual([ 1, {}, ]);
+    expect(base.mock.calls[0].length).toBe(2);
+    expect(typeOf(base.mock.calls[0][0])).toEqual(`object`);
+    expect(typeOf(base.mock.calls[0][1])).toEqual(`function`);
+    expect(base.mock.calls[1].length).toBe(3);
   });
 
   test(`The \`ctx\` object has a property for each key in the \`keys\` argument.`, () => {
@@ -127,29 +128,14 @@ describe(`kontext`, () => {
     expect(ctx.foo).toBeUndefined();
   });
 
-  test(`If base function is a thunk, calls the inner function with a \`setCtx\` argument.`, () => {
-    const base = jest.fn();
-    const keys = [ `foo`, ];
-    const withCtx = kontext(keys);
-
-    function Foo() {}
-    Foo.prototype.bar = withCtx(() => base);
-    const foo = new Foo();
-    foo.bar();
-
-    const setCtx = base.mock.calls[0][0];
-
-    expect(typeOf(setCtx)).toBe(`function`);
-  });
-
-  test(`Throws a \`TypeError\` if the \`setCtx\` is called without an object.`, () => {
+  test(`Throws a \`TypeError\` if \`setCtx\` is called without an object.`, () => {
     const errClass = TypeError;
     const errMsg = (x) => (
       `Expected \`props\` to be a object. ` +
       `\`props\` is type ${typeOf(x)} instead.`
     );
 
-    const testThunk = (x) => () => (setCtx) => setCtx(x);
+    const testThunk = (x) => (ctx, setCtx) => setCtx(x);
 
     [ [], `foo`, true, 1, null, undefined, ].forEach((x) => {
       expect(() => kontext([])(testThunk(x))()).toThrow(errClass);
@@ -160,7 +146,7 @@ describe(`kontext`, () => {
   test(`\`setCtx\` sets the value of each entry on the context.`, () => {
     const keys = [ `foo`, ];
     const withCtx = kontext(keys);
-    const setFooBar = (bar, ctx) => (setCtx) => setCtx({
+    const setFooBar = (bar, ctx, setCtx) => setCtx({
       foo: ctx.foo.toUpperCase(),
       bar,
     });
