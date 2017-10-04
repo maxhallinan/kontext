@@ -14,6 +14,8 @@ $ yarn install kontext
 
 ## Usage
 
+Provide context values to context-free functions.
+
 ```javascript
 import kontext from 'kontext';
 import { compose, log, prop, } from './util';
@@ -25,10 +27,9 @@ const greet = compose(
 );
 
 // define a context
-function Greeter(opts) {
+function Greeter(opts = {}) {
   this.greeting = opts.greeting;
 }
-
 // lift the generic function into the context
 Greeter.prototype.greet = kontext([ `greeting`, ])(greet);
 
@@ -38,19 +39,20 @@ const dog = new Greeter({
 dog.greet(); // 'Hello. This is Dog.'
 ```
 
+Compose context-free functions with a context setter to mutate the context.
+
 ```javascript
 import kontext from 'kontext';
 import { add, compose, } from './util';
 
 const count = prop(`count`);
-
 const setCount = (count) => ({ count, });
 
-function Counter(opts) {
-  this.count = opts.base || 0;
+function Counter(opts = {}) {
+  this.count = opts.init || 0;
 }
 
-const withCount = kontext([ `count`, ])
+const withCount = kontext([ `count`, ]);
 
 // pass `kontext` a thunk to gain access to a context setter
 const inc = (ctx) => (setCtx) => compose(
@@ -60,8 +62,7 @@ const inc = (ctx) => (setCtx) => compose(
   add(1),
   count,
 )(ctx);
-
-Person.prototype.inc = withCount(inc);
+Counter.prototype.inc = withCount(inc);
 
 // create reusable logic that isn't coupled to `this`.
 const skip = (n, ctx) => (setCtx) => compose(
@@ -70,15 +71,14 @@ const skip = (n, ctx) => (setCtx) => compose(
   add(n),
   count,
 )(ctx);
+Counter.prototype.skip = withCount(skip);
 
-Person.prototype.skip = withCount(skip);
-
-const counter = new Counter();
-counter.count; // 0
-counter.inc();
+const counter = new Counter({ init: 1, });
 counter.count; // 1
+counter.inc();
+counter.count; // 2
 counter.skip(10);
-counter.count; // 11
+counter.count; // 12
 ```
 
 
